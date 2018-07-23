@@ -199,7 +199,7 @@ function band(mode::Integer, move::Bool, xanc::Real, yanc::Real)
                   Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cchar}),
                  mode, move, xanc, yanc, x, y, c)
     if code != 0
-        warn("giza_band failed with error $code")
+        error("giza_band failed with error $code")
     end
     return (x[], y[], Char(c[]))
 end
@@ -405,14 +405,14 @@ function set_colour_table(pos::AbstractVector{<:Real},
                  _array(Cdouble, green), _array(Cdouble, blue),
                  n, contrast, brightness)
     if code != 0
-        warn("giza_set_colour_table failed with error $code")
+        error("giza_set_colour_table failed with error $code")
     end
 end
 
 function set_colour_table_gray()
     code = ccall((:giza_set_colour_table_gray, _GIZALIB), Cint, ())
     if code != 0
-        warn("giza_set_colour_table_gray failed with error $code")
+        error("giza_set_colour_table_gray failed with error $code")
     end
 end
 
@@ -447,11 +447,12 @@ function get_current_point()
 end
 
 function open_device(devname::AbstractString, prefix::AbstractString)
-    code = ccall((:giza_open_device, _GIZALIB), Cint,
-                 (Cstring, Cstring), devname, prefix)
-    if code != 0
-        warn("giza_open_device failed with error $code")
+    id = ccall((:giza_open_device, _GIZALIB), Cint,
+               (Cstring, Cstring), devname, prefix)
+    if id <= 0
+        error("giza_open_device failed")
     end
+    return id
 end
 
 function open_device_size(devname::AbstractString, prefix::AbstractString,
@@ -494,7 +495,7 @@ function get_key_press()
                  (Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cchar}),
                  x, y, c)
     if code != 0
-        warn("giza_get_key_press failed with error $code")
+        error("giza_get_key_press failed with error $code")
     end
     return (x[], y[], Char(c[]))
 end
@@ -1248,19 +1249,3 @@ function get_window()
 end
 
 end # module
-
-module GizaExample
-using Giza
-
-function example1()
-    Giza.open_device("?", "Getting_Started")
-    Giza.set_environment(-10, 10, 0, 100, 0, 0)
-    x = linspace(-10,10,100)
-    y = x.^2
-    Giza.line(x, y)
-    Giza.annotate("B", 2.5, 0.5, 0.5, "Furlongs")
-    Giza.annotate("L", 2.5, 0.5, 0.5, "Parsecs")
-    Giza.close_device()
-end
-
-end
