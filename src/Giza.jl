@@ -70,7 +70,19 @@ export
     GIZA_SCROLL_RIGHT,
     GIZA_OTHER_CLICK
 
-const _GIZALIB = "libgiza.so"
+if isfile(joinpath(@__DIR__, "..", "deps", "deps.jl"))
+    include(joinpath("..", "deps", "deps.jl"))
+else
+    if false
+        # For official package.
+        error("Giza not properly installed.  Please run Pkg.build(\"Giza\")")
+    else
+        # For un-official package.
+        error(string("Giza not properly installed.  Please run:\n\n",
+                     "    cd \"", normpath(@__DIR__, "..", "deps"), "\"\n",
+                     "    make GIZA_JL_DLL=\"\$PATH_TO_GIZA_DLL\"\n"))
+    end
+end
 
 _array(::Type{T}, A::DenseArray{T,N}) where {T<:Real,N} = A
 _array(::Type{T}, A::AbstractArray{<:Real,N}) where {T<:Real,N} =

@@ -43,3 +43,11 @@ For plotting 2D arrays (colored/grayscaled cells, contours, fields of
 vectors), the sub-region indices are not part of the arguments in the Julia
 version.  Plotting a sub-region is easily achieved by using *views* (FIXME:
 loss of efficiency and will be fixed soon).
+
+
+## Installation
+
+```sh
+cd "$PATH_TO_GIZA_REPOS/deps"
+make GIZA_JL_DLL="$PATH_TO_GIZA_DLL" rebuild
+```
