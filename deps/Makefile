@@ -1,11 +1,11 @@
-all: deps.jl
-
 # The following macro specifies the name or the path to the Giza dynamic
-# library to use.  It can be overriden on the command line by:
+# library to use.  It can be overridden on the command line by:
 #
 #     make GIZA_JL_DLL="$PATH_TO_GIZA_DLL" ...
 #
 GIZA_JL_DLL=libgiza.so
+
+all: deps.jl
 
 clean:
 	rm -f *~
